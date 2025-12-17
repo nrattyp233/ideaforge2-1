@@ -1,16 +1,13 @@
 
 import { GoogleGenAI } from "@google/genai";
 
-const API_KEY = process.env.API_KEY || "";
-
+// Generate a product mockup using the Gemini 2.5 Flash Image model.
 export const generateProductMockup = async (base64Image: string, prompt: string): Promise<string> => {
-  if (!API_KEY) {
-    throw new Error("API Key is missing. Please ensure process.env.API_KEY is configured.");
-  }
-
-  const ai = new GoogleGenAI({ apiKey: API_KEY });
+  // Always obtain the API key exclusively from process.env.API_KEY.
+  // Create a new GoogleGenAI instance right before making an API call to ensure it uses the correct context.
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   
-  // Using gemini-2.5-flash-image for image generation/editing tasks as per guidelines
+  // Using gemini-2.5-flash-image for image generation/editing tasks as per guidelines.
   const modelName = 'gemini-2.5-flash-image';
 
   const systemInstruction = `
@@ -27,7 +24,7 @@ export const generateProductMockup = async (base64Image: string, prompt: string)
 
   const imagePart = {
     inlineData: {
-      data: base64Image.split(',')[1], // Remove the data:image/png;base64, prefix
+      data: base64Image.split(',')[1], // Extract base64 data portion.
       mimeType: 'image/png',
     },
   };
@@ -37,6 +34,7 @@ export const generateProductMockup = async (base64Image: string, prompt: string)
   };
 
   try {
+    // Call generateContent directly with model name and contents.
     const response = await ai.models.generateContent({
       model: modelName,
       contents: { parts: [imagePart, textPart] },
@@ -47,11 +45,12 @@ export const generateProductMockup = async (base64Image: string, prompt: string)
 
     let generatedImageUrl = '';
 
-    // Iterate through candidates and parts to find the generated image
+    // Iterate through candidates and parts to find the generated image, as per guidelines.
     if (response.candidates && response.candidates[0]?.content?.parts) {
       for (const part of response.candidates[0].content.parts) {
         if (part.inlineData) {
-          generatedImageUrl = `data:image/png;base64,${part.inlineData.data}`;
+          const base64EncodeString: string = part.inlineData.data;
+          generatedImageUrl = `data:image/png;base64,${base64EncodeString}`;
           break;
         }
       }

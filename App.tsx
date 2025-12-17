@@ -397,7 +397,7 @@ const App: React.FC = () => {
           
           <div className="text-center">
             <p className="text-xs text-slate-400 font-medium">
-              &copy; {new Date().getFullYear()} IdeaForge Lab • Powered by Gemini Pro Vision
+              &copy; {new Date().getFullYear()} IdeaForge Lab • Powered by Gemini 2.5 Flash
             </p>
           </div>
         </div>
