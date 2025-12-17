@@ -12,6 +12,7 @@ export interface DrawingCanvasHandle {
   clear: () => void;
   undo: () => void;
   getCanvasData: () => string;
+  loadImage: (dataUrl: string) => void;
 }
 
 const DrawingCanvas = forwardRef<DrawingCanvasHandle, DrawingCanvasProps>(({ tool, color, size }, ref) => {
@@ -125,6 +126,20 @@ const DrawingCanvas = forwardRef<DrawingCanvasHandle, DrawingCanvasProps>(({ too
     },
     getCanvasData: () => {
       return canvasRef.current?.toDataURL('image/png') || '';
+    },
+    loadImage: (dataUrl: string) => {
+      saveToHistory();
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+      const img = new Image();
+      img.onload = () => {
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0);
+      };
+      img.src = dataUrl;
     }
   }));
 

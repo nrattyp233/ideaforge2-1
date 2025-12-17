@@ -101,13 +101,10 @@ const App: React.FC = () => {
       imageUrl: mockup.resultUrl,
       timestamp: mockup.timestamp
     });
-    
-    // Manual restore of canvas via direct access if needed
-    // Note: To truly "edit", we would need a method on DrawingCanvas to set image.
-    // For this implementation, we ensure the UI updates.
-    // A simple way to restore the sketch is to clear and draw it back.
-    // However, without a setCanvasData handle, we'll focus on the retrieval for now.
-    // Let's add that to DrawingCanvas if we want full "editing" capability.
+    // Restore sketch to canvas for editing
+    if (mockup.sketchUrl) {
+      canvasRef.current?.loadImage(mockup.sketchUrl);
+    }
   };
 
   const handleDeleteSaved = (id: string, e: React.MouseEvent) => {
