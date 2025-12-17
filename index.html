@@ -27,8 +27,18 @@
   }
 }
 </script>
+<script>
+    /**
+     * EDEN Protocol: Environment Shim
+     * Prevents ReferenceError: process is not defined in browser context.
+     * The underlying deployment platform will resolve process.env.API_KEY.
+     */
+    window.process = window.process || { env: {} };
+</script>
 </head>
 <body>
     <div id="root"></div>
+    <!-- Load the main entry point module -->
+    <script type="module" src="./index.tsx"></script>
 </body>
 </html>
